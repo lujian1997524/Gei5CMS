@@ -41,6 +41,10 @@
                     <i class="ti ti-server"></i>
                 @elseif($key === 'storage')
                     <i class="ti ti-database"></i>
+                @elseif($key === 'performance')
+                    <i class="ti ti-activity"></i>
+                @elseif($key === 'memory')
+                    <i class="ti ti-cpu"></i>
                 @elseif($key === 'primary')
                     <i class="ti ti-star"></i>
                 @elseif($key === 'secondary')
@@ -53,17 +57,21 @@
                     <i class="ti ti-info-circle"></i>
                 @endif
             </div>
-            @if($key === 'themes' && !\App\Models\Theme::where('status', 'active')->exists())
-                <div class="stat-change">
-                    <span style="color: var(--primary-blue); font-size: 11px;">需要选择</span>
+            @if(isset($stat['trend']) && isset($stat['trend_type']))
+                <div class="stat-change trend-{{ $stat['trend_type'] }}">
+                    <span>{{ $stat['trend'] }}</span>
+                </div>
+            @elseif($key === 'themes' && !\App\Models\Theme::where('status', 'active')->exists())
+                <div class="stat-change trend-warning">
+                    <span>需要选择</span>
                 </div>
             @elseif($key === 'plugins')
-                <div class="stat-change">
-                    <span style="color: var(--primary-green); font-size: 11px;">可扩展</span>
+                <div class="stat-change trend-info">
+                    <span>可扩展</span>
                 </div>
             @else
-                <div class="stat-change">
-                    <span style="color: var(--primary-green); font-size: 11px;">正常</span>
+                <div class="stat-change trend-success">
+                    <span>正常</span>
                 </div>
             @endif
         </div>
@@ -72,6 +80,18 @@
         <div class="mt-2">
             <small class="text-muted">{{ $stat['description'] }}</small>
         </div>
+        @if($key === 'performance' || $key === 'memory')
+        <div class="stat-progress mt-2">
+            <div class="progress-bar 
+                @if($stat['trend_type'] === 'success') bg-success
+                @elseif($stat['trend_type'] === 'warning') bg-warning  
+                @elseif($stat['trend_type'] === 'danger') bg-danger
+                @else bg-info
+                @endif" 
+                style="width: {{ $key === 'performance' ? min(100, max(10, 100 - (int)filter_var($stat['value'], FILTER_SANITIZE_NUMBER_INT) / 5)) : (strpos($stat['value'], '(') !== false ? (int)filter_var(substr($stat['value'], strpos($stat['value'], '(') + 1), FILTER_SANITIZE_NUMBER_INT) : 0) }}%">
+            </div>
+        </div>
+        @endif
     </div>
     @endforeach
 </div>
@@ -184,12 +204,64 @@
     }
     
     .stat-change {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
         padding: 4px 8px;
         border-radius: 6px;
+    }
+    
+    .trend-success {
         background: var(--light-green);
         color: var(--primary-green);
+    }
+    
+    .trend-warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .trend-danger {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .trend-info {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .trend-neutral {
+        background: var(--soft-gray);
+        color: var(--text-secondary);
+    }
+    
+    .stat-progress {
+        height: 4px;
+        background-color: var(--soft-gray);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        transition: width 0.3s ease;
+        border-radius: 2px;
+    }
+    
+    .bg-success {
+        background-color: var(--primary-green) !important;
+    }
+    
+    .bg-warning {
+        background-color: #ffc107 !important;
+    }
+    
+    .bg-danger {
+        background-color: #dc3545 !important;
+    }
+    
+    .bg-info {
+        background-color: var(--primary-blue) !important;
     }
     
     .card-body .border-bottom:last-child {
@@ -198,6 +270,31 @@
     
     .card-body .border-bottom:hover {
         background-color: var(--soft-gray);
+    }
+    
+    /* Enhanced stat cards */
+    .stat-card {
+        position: relative;
+        transition: all 0.2s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-dropdown);
+    }
+    
+    .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin: 8px 0 4px 0;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
     }
 </style>
 @endpush

@@ -49,45 +49,61 @@ class DashboardController extends Controller
                     'label' => '主要数据',
                     'value' => 0,
                     'description' => '等待主题提供',
+                    'trend' => '0%',
+                    'trend_type' => 'neutral',
                 ],
                 'secondary' => [
                     'label' => '次要数据', 
                     'value' => 0,
                     'description' => '等待主题提供',
+                    'trend' => '0%',
+                    'trend_type' => 'neutral',
                 ],
                 'activity' => [
                     'label' => '活动数据',
                     'value' => 0,
                     'description' => '等待主题提供',
+                    'trend' => '0%',
+                    'trend_type' => 'neutral',
                 ],
                 'overview' => [
                     'label' => '总览数据',
                     'value' => 0,
                     'description' => '等待主题提供',
+                    'trend' => '0%',
+                    'trend_type' => 'neutral',
                 ]
             ]);
         } else {
-            // 没有激活主题时的默认统计
+            // 没有激活主题时的默认统计，增加性能监控
             $stats = [
                 'themes' => [
                     'label' => '可用主题',
                     'value' => Theme::count(),
                     'description' => '选择一个主题开始使用',
+                    'trend' => '稳定',
+                    'trend_type' => 'success',
                 ],
                 'plugins' => [
                     'label' => '可用插件',
                     'value' => Plugin::count(),
                     'description' => '扩展网站功能',
+                    'trend' => '可扩展',
+                    'trend_type' => 'info',
                 ],
-                'system' => [
-                    'label' => '系统状态',
-                    'value' => '正常',
-                    'description' => '框架运行正常',
+                'performance' => [
+                    'label' => '响应时间',
+                    'value' => $this->getResponseTime() . 'ms',
+                    'description' => '页面平均响应时间',
+                    'trend' => $this->getPerformanceTrend(),
+                    'trend_type' => $this->getPerformanceTrendType(),
                 ],
-                'storage' => [
-                    'label' => '存储空间',
-                    'value' => $this->getStorageUsage(),
-                    'description' => '已使用存储空间',
+                'memory' => [
+                    'label' => '内存使用',
+                    'value' => $this->getMemoryUsage(),
+                    'description' => '当前内存占用情况',
+                    'trend' => $this->getMemoryTrend(),
+                    'trend_type' => $this->getMemoryTrendType(),
                 ]
             ];
         }
@@ -468,5 +484,93 @@ class DashboardController extends Controller
         }
         
         return round($size, $precision) . ' ' . $units[$i];
+    }
+
+    protected function getResponseTime(): int
+    {
+        // 模拟响应时间计算，实际环境中可以通过APM工具获取
+        $start = microtime(true);
+        \DB::connection()->getPdo(); // 简单的数据库连接测试
+        $end = microtime(true);
+        
+        return round(($end - $start) * 1000); // 转换为毫秒
+    }
+
+    protected function getPerformanceTrend(): string
+    {
+        $responseTime = $this->getResponseTime();
+        if ($responseTime < 100) {
+            return '优秀';
+        } elseif ($responseTime < 300) {
+            return '良好';
+        } elseif ($responseTime < 500) {
+            return '一般';
+        } else {
+            return '需优化';
+        }
+    }
+
+    protected function getPerformanceTrendType(): string
+    {
+        $responseTime = $this->getResponseTime();
+        if ($responseTime < 100) {
+            return 'success';
+        } elseif ($responseTime < 300) {
+            return 'info';
+        } elseif ($responseTime < 500) {
+            return 'warning';
+        } else {
+            return 'danger';
+        }
+    }
+
+    protected function getMemoryTrend(): string
+    {
+        $memory = memory_get_usage(true);
+        $limit = $this->parseSize(ini_get('memory_limit'));
+        $percentage = $limit > 0 ? ($memory / $limit) * 100 : 0;
+        
+        if ($percentage < 50) {
+            return '正常';
+        } elseif ($percentage < 75) {
+            return '注意';
+        } else {
+            return '告警';
+        }
+    }
+
+    protected function getMemoryTrendType(): string
+    {
+        $memory = memory_get_usage(true);
+        $limit = $this->parseSize(ini_get('memory_limit'));
+        $percentage = $limit > 0 ? ($memory / $limit) * 100 : 0;
+        
+        if ($percentage < 50) {
+            return 'success';
+        } elseif ($percentage < 75) {
+            return 'warning';
+        } else {
+            return 'danger';
+        }
+    }
+
+    protected function getSystemHealth(): array
+    {
+        return [
+            'database' => $this->checkDatabaseConnection(),
+            'cache' => $this->checkCacheConnection(),
+            'permissions' => $this->checkFilePermissions(),
+            'disk_space' => $this->checkDiskSpace(),
+            'php_version' => version_compare(PHP_VERSION, '8.2.0', '>='),
+        ];
+    }
+
+    protected function getSystemHealthScore(): int
+    {
+        $health = $this->getSystemHealth();
+        $total = count($health);
+        $passed = count(array_filter($health));
+        
+        return round(($passed / $total) * 100);
     }
 }
