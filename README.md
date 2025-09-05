@@ -67,45 +67,49 @@
 
 ### 环境要求
 
-```bash
+```
 PHP >= 8.2
 MySQL >= 8.0  
 Redis (推荐)
-Composer
+Web服务器 (Apache/Nginx)
 ```
 
-### 一键安装
+### 安装步骤
+
+**第一步：下载文件**
+```bash
+# 下载并解压到网站目录
+wget https://github.com/lujian1997524/Gei5CMS/releases/latest/download/gei5cms.zip
+unzip gei5cms.zip -d /your/web/directory/
+```
+
+**第二步：设置权限**
+```bash
+# 设置目录权限
+chmod -R 755 /your/web/directory/gei5cms/
+chmod -R 777 storage/ bootstrap/cache/ plugins/ themes/
+```
+
+**第三步：Web安装**
+
+1. 在浏览器中访问：`http://your-domain.com/install`
+2. 按照安装向导完成以下配置：
+   - 环境检测（PHP版本、扩展等）
+   - 数据库配置（主机、用户名、密码）
+   - 管理员账户设置
+   - 站点基本信息
+3. 安装完成后自动跳转到管理后台
+
+**安装完成！** 开始选择主题，搭建你的应用吧！
+
+### 快速体验
+
+想要快速体验？我们提供了一键Docker部署：
 
 ```bash
-# 克隆项目
-git clone https://github.com/lujian1997524/Gei5CMS.git
-cd Gei5CMS
-
-# 安装依赖
-composer install
-
-# 环境配置
-cp .env.example .env
-php artisan key:generate
-
-# 数据库迁移
-php artisan migrate
-
-# 启动服务
-php artisan serve
+docker run -d -p 8080:80 gei5cms/gei5cms:latest
+# 访问 http://localhost:8080/install 开始安装
 ```
-
-### 创建管理员
-
-```bash
-# 方式一：命令行创建
-php artisan db:seed --class=AdminUserSeeder
-
-# 方式二：访问安装页面
-http://localhost:8000/admin/create-default-admin
-```
-
-**默认账户：** `admin` / `password`
 
 ## 5分钟创建博客主题
 
@@ -202,7 +206,16 @@ Gei5CMS/
 
 ## 开发命令
 
+> 以下命令仅供开发者使用，普通用户请使用Web安装向导
+
 ```bash
+# 开发环境设置
+git clone https://github.com/lujian1997524/Gei5CMS.git
+cd Gei5CMS
+composer install
+cp .env.example .env
+php artisan key:generate
+
 # 开发服务器
 php artisan serve
 
