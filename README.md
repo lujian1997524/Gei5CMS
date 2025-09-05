@@ -1,34 +1,85 @@
-# Gei5CMS - 现代化内容管理系统
+<div align="center">
 
-## 项目简介
+# Gei5CMS
 
-Gei5CMS 是基于 Laravel 12.4.0 开发的现代化内容管理系统，采用"极简核心，主题驱动"的设计理念。通过不同主题可以构建博客、电商、论坛、社区等任意类型的Web应用。
+**多形态Web应用引擎**
 
-### 核心特性
+基于 Laravel 12.4.0 的极简核心，主题驱动架构  
+一套框架，构建博客、电商、论坛、社区等任意Web应用
 
-- **极简核心** - 仅提供基础框架服务，业务逻辑完全由主题实现
-- **主题驱动** - 一套框架，无限应用可能
-- **插件扩展** - 丰富的插件生态，提供通用服务支持  
-- **现代架构** - Laravel 12 + 现代化钩子系统
-- **优雅界面** - macOS 15 风格的管理后台
+[快速开始](#快速开始) • [在线演示](#) • [文档](docs/) • [主题市场](#) • [插件生态](#)
+
+</div>
+
+---
+
+## 为什么选择 Gei5CMS？
+
+<table>
+<tr>
+<td width="50%">
+
+### 极简核心
+- **零冗余**：核心只做必要的事
+- **高性能**：Laravel 12.4.0 + PHP 8.2
+- **现代化**：原生钩子系统，非WordPress兼容
+
+</td>
+<td width="50%">
+
+### 主题驱动
+- **一套框架**：安装一次，无限可能
+- **快速切换**：博客→电商→论坛，一键切换
+- **开发友好**：标准化主题开发接口
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 插件生态
+- **丰富扩展**：支付、SEO、分析等通用服务
+- **即插即用**：无需修改核心代码
+- **开发简单**：现代化插件开发体验
+
+</td>
+<td width="50%">
+
+### 管理体验
+- **macOS风格**：优雅的管理后台界面
+- **双模式**：引导模式 + 运营模式
+- **响应式**：完美适配各种设备
+
+</td>
+</tr>
+</table>
+
+## 应用场景
+
+| 应用类型 | 主题示例 | 适用场景 |
+|---------|---------|---------|
+| **内容类** | Blog Pro, News Hub | 个人博客、企业官网、新闻资讯 |
+| **电商类** | Shop Master, Card Mall | 在线商城、虚拟商品、团购平台 |
+| **社交类** | Forum Plus, Community | 论坛社区、问答平台、会员系统 |
+| **工具类** | Short Link, Form Builder | 短链服务、表单收集、数据分析 |
 
 ## 快速开始
 
 ### 环境要求
 
-```
+```bash
 PHP >= 8.2
-MySQL >= 8.0
+MySQL >= 8.0  
 Redis (推荐)
 Composer
 ```
 
-### 安装步骤
+### 一键安装
 
 ```bash
 # 克隆项目
-git clone <repository-url> gei5cms
-cd gei5cms
+git clone https://github.com/lujian1997524/Gei5CMS.git
+cd Gei5CMS
 
 # 安装依赖
 composer install
@@ -37,214 +88,162 @@ composer install
 cp .env.example .env
 php artisan key:generate
 
-# 数据库配置
+# 数据库迁移
 php artisan migrate
 
-# 启动开发服务器
+# 启动服务
 php artisan serve
 ```
 
-### 初始化管理员
+### 创建管理员
 
 ```bash
-# 创建默认管理员账户
+# 方式一：命令行创建
 php artisan db:seed --class=AdminUserSeeder
 
-# 或访问: http://localhost:8000/admin/create-default-admin
+# 方式二：访问安装页面
+http://localhost:8000/admin/create-default-admin
 ```
 
-默认管理员：
-- 用户名: `admin` 
-- 密码: `password`
+**默认账户：** `admin` / `password`
 
-## 项目架构
-
-### 核心模块
-
-```
-Gei5CMS
-├── 用户认证系统      # 管理员登录、权限管理
-├── 主题管理系统      # 主题切换、配置、预览
-├── 插件管理系统      # 插件安装、激活、配置
-├── 现代钩子系统      # Laravel原生钩子机制
-├── 动态菜单系统      # 主题插件动态注册菜单
-└── 管理后台界面      # macOS风格现代化界面
-```
-
-### 支持的应用类型
-
-通过不同主题，可以快速构建：
-
-- **内容类**: 博客、新闻、知识库、文档站
-- **电商类**: 商城、发卡、团购、分类信息  
-- **社交类**: 论坛、社区、问答、会员系统
-- **工具类**: 短链、表单、数据分析、API服务
-
-## 主题开发
-
-### 主题结构
-
-```
-themes/my-theme/
-├── theme.json          # 主题配置文件
-├── admin/             # 管理后台相关
-│   ├── Controllers/   # 业务控制器
-│   ├── Views/         # 管理界面  
-│   └── routes.php     # 后台路由
-├── public/            # 前台相关
-│   ├── Controllers/   # 前台控制器
-│   ├── Views/         # 前台模板
-│   └── assets/        # 静态资源
-└── Providers/         # 服务提供者
-    └── ThemeServiceProvider.php
-```
-
-### 主题注册菜单
+## 5分钟创建博客主题
 
 ```php
-// 在主题服务提供者中
-Hook::registerHook('admin.menu.init', function() {
-    AdminMenuService::register('blog_menu', [
-        'key' => 'blog-management',
-        'label' => '博客管理',
-        'icon' => 'ti ti-file-text',
-        'children' => [
-            [
-                'key' => 'posts',
-                'label' => '文章管理',
-                'route' => 'admin.blog.posts.index',
-                'icon' => 'ti ti-edit'
-            ]
-        ]
-    ]);
-});
+// themes/my-blog/Providers/ThemeServiceProvider.php
+class BlogThemeProvider extends ServiceProvider 
+{
+    public function boot()
+    {
+        // 注册路由
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+        
+        // 注册视图
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'blog');
+        
+        // 注册管理菜单
+        Hook::registerHook('admin.menu.init', function() {
+            AdminMenuService::register('blog', [
+                'label' => '博客管理',
+                'icon' => 'ti ti-edit',
+                'children' => [
+                    ['label' => '文章管理', 'route' => 'admin.posts.index'],
+                    ['label' => '分类管理', 'route' => 'admin.categories.index']
+                ]
+            ]);
+        });
+    }
+}
 ```
 
-## 插件开发
+## 核心特性
 
-### 插件结构
-
-```
-plugins/my-plugin/
-├── plugin.json        # 插件配置
-├── src/              # 源代码
-│   ├── Controllers/  # 控制器
-│   ├── Models/       # 模型
-│   ├── Services/     # 服务类
-│   └── Providers/    # 服务提供者
-├── resources/        # 资源文件
-│   ├── views/        # 视图模板
-│   └── assets/       # 静态资源
-└── database/         # 数据库文件
-    └── migrations/   # 数据迁移
-```
-
-### 插件注册钩子
+### 现代化钩子系统
 
 ```php
-// 插件服务提供者
+// 注册钩子
+Hook::registerHook('post.created', function($post) {
+    // 文章创建后的处理逻辑
+    Cache::tags(['posts'])->flush();
+    event(new PostCreated($post));
+}, 10, 'blog_theme');
+
+// 在模板中使用
+@hook('post.sidebar.widgets')
+@filter('post.content', $post->content)
+```
+
+### 插件开发
+
+```php
+// plugins/payment/src/PaymentServiceProvider.php
 class PaymentServiceProvider extends ServiceProvider
 {
     public function boot()
     {
         // 注册支付钩子
-        Hook::registerHook('order.created', [$this, 'processPayment'], 10, 'payment_plugin');
+        Hook::registerHook('order.created', [$this, 'processPayment']);
         
-        // 注册管理菜单
-        Hook::registerHook('admin.menu.init', [$this, 'registerMenus']);
+        // 添加管理菜单
+        Hook::registerHook('admin.menu.init', function() {
+            AdminMenuService::register('payment', [
+                'label' => '支付管理',
+                'route' => 'admin.payment.index'
+            ]);
+        });
     }
 }
 ```
 
-## 钩子系统
+## 项目结构
 
-### 基础用法
-
-```php
-// 注册钩子
-Hook::registerHook('user.created', function($user) {
-    // 用户创建后的处理逻辑
-}, 10, 'my_plugin');
-
-// 触发动作钩子
-Hook::doAction('user.created', $user);
-
-// 应用过滤器钩子  
-$title = Hook::applyFilters('post.title', $originalTitle, $post);
+```
+Gei5CMS/
+├── app/                    # Laravel 应用核心
+│   ├── Services/          # 核心服务（钩子、菜单等）
+│   ├── Http/Controllers/  # 控制器
+│   └── Models/           # 数据模型
+├── themes/               # 主题目录
+│   └── theme-name/      # 具体主题
+├── plugins/             # 插件目录
+│   └── plugin-name/    # 具体插件
+├── resources/views/admin/ # 管理后台视图
+└── docs/               # 项目文档
 ```
 
-### Blade指令
+## 文档导航
 
-```blade
-{{-- 执行钩子 --}}
-@hook('admin.sidebar.app_menu')
+| 文档 | 描述 |
+|------|------|
+| [架构设计](docs/ARCHITECTURE.md) | 系统架构和设计理念 |
+| [钩子系统](docs/MODERN_HOOK_SYSTEM.md) | 钩子系统完整指南 |
+| [API参考](docs/API_REFERENCE.md) | 开发接口文档 |
+| [开发流程](docs/DEVELOPMENT_WORKFLOW.md) | 项目开发规范 |
 
-{{-- 条件钩子 --}}
-@hasHook('custom.feature')
-    <div>自定义功能可用</div>
-@endhasHook
-
-{{-- 过滤器输出 --}}
-@filter('content.excerpt', $post->content)
-```
-
-## 文档
-
-- [架构设计](docs/ARCHITECTURE.md) - 系统架构和核心概念
-- [钩子系统](docs/MODERN_HOOK_SYSTEM.md) - 现代化钩子系统详解
-- [API参考](docs/API_REFERENCE.md) - 接口和钩子完整清单
-
-## 开发环境
-
-### 开发命令
+## 开发命令
 
 ```bash
-# 启动开发服务器
+# 开发服务器
 php artisan serve
 
-# 数据库迁移
+# 数据库操作
 php artisan migrate
+php artisan db:seed
 
-# 清除缓存
+# 缓存清理
 php artisan cache:clear
 php artisan config:clear
 
-# 钩子系统调试
+# 钩子调试
 php artisan tinker
 >>> Hook::getHookStatistics()
 ```
 
-### 目录权限
+## 参与贡献
 
-```bash
-# 设置存储目录权限
-chmod -R 775 storage/
-chmod -R 775 bootstrap/cache/
-chmod -R 775 plugins/
-chmod -R 775 themes/
-```
+我们欢迎所有形式的贡献！
 
-## 贡献指南
-
-欢迎贡献代码！请遵循以下步骤：
-
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)  
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+1. **Fork** 项目到你的账户
+2. **创建** 功能分支 (`git checkout -b feature/amazing-feature`)
+3. **提交** 你的更改 (`git commit -m 'Add amazing feature'`)
+4. **推送** 到分支 (`git push origin feature/amazing-feature`)
+5. **创建** Pull Request
 
 ## 开源协议
 
-本项目基于 MIT 协议开源 - 查看 [LICENSE](LICENSE) 文件了解详情。
+基于 [MIT License](LICENSE) 开源协议
 
 ## 致谢
 
-- [Laravel](https://laravel.com) - 优雅的PHP Web框架
-- [Tabler Icons](https://tabler-icons.io) - 美观的开源图标库
+- [Laravel](https://laravel.com) - 优雅的 PHP Web 框架
+- [Tabler Icons](https://tabler-icons.io) - 精美的开源图标库
 
 ---
 
-**版本**: v1.0.0  
-**最后更新**: 2025年9月5日  
-**维护者**: Gei5CMS Team
+<div align="center">
+
+**[官网](#) • [社区](#) • [博客](#) • [支持](#)**
+
+Made with ❤️ by Gei5CMS Team
+
+</div>
