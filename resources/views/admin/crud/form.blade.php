@@ -147,24 +147,24 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
-                        <i class="ti ti-settings me-2"></i>
+                        <i class="bi bi-gear me-2"></i>
                         操作
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">
-                            <i class="ti ti-check me-2"></i>
+                            <i class="bi bi-check me-2"></i>
                             {{ $form_method === 'POST' ? '创建' : '更新' }}
                         </button>
                         
                         <button type="submit" name="save_and_continue" value="1" class="btn btn-outline-primary">
-                            <i class="ti ti-check me-2"></i>
+                            <i class="bi bi-check me-2"></i>
                             保存并继续编辑
                         </button>
                         
                         <a href="{{ route('admin.' . $route . '.index') }}" class="btn btn-outline-secondary">
-                            <i class="ti ti-x me-2"></i>
+                            <i class="bi bi-x me-2"></i>
                             取消
                         </a>
                     </div>
@@ -198,7 +198,7 @@
         
         // 显示加载状态
         submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="ti ti-loader animate-spin me-2"></i>正在保存...';
+        submitButton.innerHTML = '<i class="bi bi-arrow-repeat animate-spin me-2"></i>正在保存...';
         
         // 恢复按钮状态（如果提交失败）
         setTimeout(() => {
@@ -277,7 +277,7 @@
             tag.innerHTML = `
                 ${text.trim()}
                 <button type="button" class="tag-remove">
-                    <i class="ti ti-x" style="font-size: 12px;"></i>
+                    <i class="bi bi-x" style="font-size: 12px;"></i>
                 </button>
             `;
             

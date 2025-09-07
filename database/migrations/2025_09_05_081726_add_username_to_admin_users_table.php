@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('admin_users', function (Blueprint $table) {
+        $tableName = config('database.connections.mysql.prefix', '') . 'admin_users';
+        
+        Schema::table($tableName, function (Blueprint $table) {
             $table->string('username')->unique()->after('id');
             $table->boolean('is_active')->default(true)->after('status');
         });
@@ -22,7 +24,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('admin_users', function (Blueprint $table) {
+        $tableName = config('database.connections.mysql.prefix', '') . 'admin_users';
+        
+        Schema::table($tableName, function (Blueprint $table) {
             $table->dropColumn(['username', 'is_active']);
         });
     }

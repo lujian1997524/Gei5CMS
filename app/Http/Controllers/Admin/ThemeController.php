@@ -51,7 +51,7 @@ class ThemeController extends Controller
                                 'description' => $manifest['description'] ?? '',
                                 'version' => $manifest['version'] ?? '1.0.0',
                                 'author' => $manifest['author'] ?? '',
-                                'status' => $theme->status ?? 'inactive',
+                                'status' => $theme ? $theme->status : 'inactive',
                                 'installed' => $theme ? true : false,
                                 'manifest' => $manifest,
                                 'path' => $dir,

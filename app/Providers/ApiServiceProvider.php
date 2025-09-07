@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Services\ApiManager;
 use App\Services\ApiEndpointRegistry;
+use App\Traits\ChecksInstallStatus;
 use Illuminate\Support\ServiceProvider;
 
 class ApiServiceProvider extends ServiceProvider
 {
+    use ChecksInstallStatus;
     public function register(): void
     {
         $this->app->singleton(ApiManager::class, function ($app) {
@@ -24,6 +26,11 @@ class ApiServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // 检查是否在安装过程中
+        if ($this->isInstalling()) {
+            return;
+        }
+
         // 注册中间件
         $this->registerMiddleware();
         

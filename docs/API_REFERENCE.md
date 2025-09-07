@@ -160,6 +160,87 @@ AdminMenuService::getMenusByPosition(string $position): array
 AdminMenuService::renderSidebarMenus(): void
 ```
 
+## 🔧 服务类接口
+
+### ThemeUserService API
+
+完整的主题用户管理服务，为主题提供强大的用户管理功能：
+
+```php
+$themeUserService = app(ThemeUserService::class);
+
+// 角色管理
+$role = $themeUserService->createRole([
+    'role_slug' => 'premium_member',
+    'role_name' => '高级会员', 
+    'role_description' => '享受高级功能的会员用户',
+    'permissions' => ['premium.access', 'premium.download'],
+    'theme_slug' => 'ecommerce_theme',
+    'priority' => 100,
+]);
+
+$roles = $themeUserService->getThemeRoles('ecommerce_theme');
+$deleted = $themeUserService->deleteThemeRole('premium_member', 'ecommerce_theme');
+
+// 用户角色分配
+$success = $themeUserService->assignRoleToUser($user, 'premium_member', [
+    'expires_at' => now()->addDays(30)
+]);
+$success = $themeUserService->removeRoleFromUser($user, 'premium_member');
+
+// 用户元数据管理
+$success = $themeUserService->setUserMeta($user, [
+    'phone' => '13800138000',
+    'vip_level' => 3,
+    'preferences' => ['dark_mode' => true]
+]);
+$metaData = $themeUserService->getUserMeta($user, 'phone');
+$allMeta = $themeUserService->getUserMeta($user);
+
+// 权限检查（支持缓存）
+$canPublish = $themeUserService->userCan($user, 'content.publish');
+
+// 获取用户主题角色
+$themeRoles = $themeUserService->getUserThemeRoles($user, 'blog_theme');
+
+// 高级用户查询
+$query = $themeUserService->getUserQuery([
+    'roles' => ['premium_member', 'vip_user'],
+    'meta' => ['vip_level' => 3, 'status' => 'active'],
+    'verified' => true,
+    'registered_after' => '2025-01-01',
+    'search' => 'john@example.com'
+]);
+
+$users = $query->paginate(15);
+
+// 批量用户操作
+$results = $themeUserService->bulkUserAction([1, 2, 3, 4, 5], 'assign_role', [
+    'role_slug' => 'premium_member',
+    'expires_at' => now()->addDays(30)
+]);
+
+$results = $themeUserService->bulkUserAction([6, 7, 8], 'set_meta', [
+    'meta_data' => ['newsletter' => true, 'vip_level' => 2]
+]);
+
+$results = $themeUserService->bulkUserAction([9, 10], 'verify_email');
+
+// 用户统计数据
+$stats = $themeUserService->getUserStats([
+    'roles' => ['premium_member'],
+    'verified' => true
+]);
+// 返回: ['total' => 150, 'verified' => 145, 'registered_today' => 5, ...]
+
+// 邮箱验证管理
+$success = $themeUserService->verifyUserEmail($user);
+$success = $themeUserService->unverifyUserEmail($user);
+
+// 主题钩子注册（自动处理主题切换）
+$themeUserService->registerThemeHooks('my_theme');
+```
+
 ## 🔧 全局辅助函数
 
 ### 钩子相关函数
@@ -231,9 +312,32 @@ is_theme_active(string $themeName): bool
 
 #### 用户管理
 ```php
-'user.login.before'  // 用户登录前
-'user.login.after'   // 用户登录后
-'user.logout.after'  // 用户退出后
+'user.login.before'    // 用户登录前
+'user.login.after'     // 用户登录后
+'user.logout.after'    // 用户退出后
+'user.created'         // 用户创建后
+'user.updated'         // 用户更新后
+'user.deleted'         // 用户删除后
+
+// 用户角色钩子
+'theme.user.role.creating'    // 角色创建前
+'theme.user.role.created'     // 角色创建后
+'theme.user.role.assigned'    // 角色分配后
+'theme.user.role.removed'     // 角色移除后
+'theme.user.role.deleting'    // 角色删除前
+'theme.user.role.deleted'     // 角色删除后
+
+// 用户元数据钩子
+'theme.user.meta.updating'    // 元数据更新前
+'theme.user.meta.updated'     // 元数据更新后
+
+// 批量操作钩子
+'theme.users.bulk_action.start'     // 批量操作开始
+'theme.users.bulk_action.complete'  // 批量操作完成
+
+// 邮箱验证钩子
+'theme.user.email.verified'         // 邮箱验证后
+'theme.user.email.unverified'       // 邮箱验证取消后
 ```
 
 ### 管理后台钩子
@@ -391,12 +495,85 @@ abstract class BaseThemeServiceProvider extends ServiceProvider
 
 ### 核心模型
 
-#### AdminUser 模型
+#### User 模型 (前台用户)
 ```php
-// 管理员用户相关操作
-AdminUser::create($data)
-AdminUser::findByUsername($username)
-AdminUser::findByEmail($email)
+// 基础用户操作
+User::create($data)
+User::findByEmail($email)
+
+// 元数据操作
+$user->setMeta($key, $value)
+$user->getMeta($key, $default = null)
+$user->getAllMeta()
+$user->deleteMeta($key)
+$user->syncMeta($data)
+
+// 角色和权限
+$user->assignRole($roleSlug, $options = [])
+$user->removeRole($roleSlug)
+$user->syncRoles($roleSlugs)
+$user->hasRole($roleSlug)
+$user->hasAnyRole($roleSlugs)
+$user->hasAllRoles($roleSlugs)
+$user->hasPermission($permission)
+$user->getAllPermissions()
+
+// 获取角色信息
+$user->getRoleNames()
+$user->getRoleSlugs()
+$user->getHighestPriorityRole()
+$user->getRolesInTheme($themeSlug)
+$user->hasRoleInTheme($themeSlug)
+
+// 查询作用域
+User::verified()
+User::unverified()
+User::withRole($roleSlug)
+User::withMeta($key, $value = null)
+```
+
+#### UserRole 模型
+```php
+// 角色管理
+UserRole::create($data)
+UserRole::active()
+UserRole::byTheme($themeSlug)
+UserRole::byPriority($direction = 'desc')
+
+// 权限操作
+$role->hasPermission($permission)
+$role->givePermission($permission)
+$role->revokePermission($permission)
+$role->syncPermissions($permissions)
+
+// 用户分配
+$role->assignToUser($user, $options = [])
+$role->removeFromUser($user)
+$role->belongsToTheme($themeSlug)
+$role->isExpiredForUser($user)
+```
+
+#### UserMeta 模型
+```php
+// 元数据查询
+UserMeta::byKey($key)
+UserMeta::byUser($userId)
+
+// 值转换
+$meta->formatted_value  // 自动类型转换
+```
+
+#### UserRoleAssignment 模型
+```php
+// 分配状态检查
+$assignment->isExpired()
+$assignment->isActive()
+
+// 查询作用域
+UserRoleAssignment::active()
+UserRoleAssignment::expired()
+UserRoleAssignment::forUser($userId)
+UserRoleAssignment::forRole($roleId)
 ```
 
 #### Plugin 模型
@@ -446,6 +623,20 @@ if (Hook::hasHook('my.custom.hook')) {
 
 ---
 
-**文档版本**: 1.0  
+**文档版本**: 2.0  
 **最后更新**: 2025年9月5日  
 **适用版本**: Gei5CMS v1.0.0
+
+## 更新日志
+
+### v2.0 (2025-09-05)
+- ✅ 新增用户扩展系统API (User模型、UserRole、UserMeta等)
+- ✅ 新增ThemeUserService完整API文档
+- ✅ 新增用户相关钩子清单
+- ✅ 完善数据模型接口文档
+- ✅ 更新服务类接口章节
+
+### v1.0 (2025-09-04) 
+- 🔧 初始API和接口文档
+- 🔧 钩子系统API文档
+- 🔧 基础辅助函数清单

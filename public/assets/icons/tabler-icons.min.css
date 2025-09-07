@@ -1,0 +1,71 @@
+/*!
+ * Tabler Icons 2.47.0 by tabler - https://tabler.io
+ * License - https://github.com/tabler/tabler-icons/blob/master/LICENSE
+ */
+@font-face {
+  font-family: "tabler-icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/tabler-icons.eot");
+  src: url("./fonts/tabler-icons.eot#iefix") format("embedded-opentype"),
+       url("./fonts/tabler-icons.woff2") format("woff2"),
+       url("./fonts/tabler-icons.woff") format("woff"),
+       url("./fonts/tabler-icons.ttf") format("truetype");
+}
+
+.ti {
+  font-family: "tabler-icons" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ti-home:before { content: "\ea44"; }
+.ti-users:before { content: "\ebb6"; }
+.ti-settings:before { content: "\ea2c"; }
+.ti-dashboard:before { content: "\ea3b"; }
+.ti-file:before { content: "\ebc0"; }
+.ti-edit:before { content: "\ea69"; }
+.ti-refresh:before { content: "\eb13"; }
+.ti-plus:before { content: "\ea0b"; }
+.ti-user-shield:before { content: "\f4a1"; }
+.ti-palette:before { content: "\eb0d"; }
+.ti-puzzle:before { content: "\ebdf"; }
+.ti-server-2:before { content: "\f07c"; }
+.ti-database:before { content: "\ea2d"; }
+.ti-chart-line:before { content: "\ebc4"; }
+.ti-cpu-2:before { content: "\ef51"; }
+.ti-star-filled:before { content: "\f6a6"; }
+.ti-chart-bar:before { content: "\ebc3"; }
+.ti-activity:before { content: "\ed23"; }
+.ti-eye:before { content: "\ea64"; }
+.ti-info-circle:before { content: "\ea77"; }
+.ti-zap:before { content: "\ebc7"; }
+.ti-clock:before { content: "\ea2e"; }
+.ti-dots-vertical:before { content: "\ea55"; }
+.ti-trash:before { content: "\eab2"; }
+.ti-mail-check:before { content: "\ea84"; }
+.ti-mail-x:before { content: "\ea87"; }
+.ti-user-plus:before { content: "\ea9f"; }
+.ti-search:before { content: "\ea8f"; }
+.ti-key:before { content: "\ea79"; }
+.ti-menu-2:before { content: "\ea90"; }
+.ti-x:before { content: "\eab8"; }
+.ti-chevron-down:before { content: "\ea2a"; }
+.ti-logout:before { content: "\ea82"; }
+.ti-adjustments:before { content: "\ea03"; }
+.ti-folder:before { content: "\ea6b"; }
+.ti-photo:before { content: "\ea9a"; }
+.ti-code:before { content: "\ea2f"; }
+.ti-files:before { content: "\ea69"; }
+.ti-world:before { content: "\eab4"; }
+.ti-tools:before { content: "\eaab"; }
+.ti-bell:before { content: "\ea35"; }
+.ti-moon:before { content: "\ea91"; }
+.ti-sun:before { content: "\ea9d"; }
+.ti-language:before { content: "\ea7a"; }

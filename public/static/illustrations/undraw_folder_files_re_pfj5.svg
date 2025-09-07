@@ -1,0 +1,37 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Folder -->
+  <rect x="80" y="120" width="240" height="160" rx="8" fill="#E5F3FF" stroke="#93C5FD" stroke-width="2"/>
+  <path d="M80 140 L140 140 L150 120 L240 120 L240 140 L320 140" stroke="#93C5FD" stroke-width="2" fill="none"/>
+  
+  <!-- Files -->
+  <rect x="120" y="160" width="60" height="80" rx="4" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="200" y="160" width="60" height="80" rx="4" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  
+  <!-- File lines -->
+  <line x1="130" y1="180" x2="170" y2="180" stroke="#60A5FA" stroke-width="1"/>
+  <line x1="130" y1="190" x2="165" y2="190" stroke="#60A5FA" stroke-width="1"/>
+  <line x1="130" y1="200" x2="160" y2="200" stroke="#60A5FA" stroke-width="1"/>
+  
+  <line x1="210" y1="180" x2="250" y2="180" stroke="#60A5FA" stroke-width="1"/>
+  <line x1="210" y1="190" x2="245" y2="190" stroke="#60A5FA" stroke-width="1"/>
+  <line x1="210" y1="200" x2="240" y2="200" stroke="#60A5FA" stroke-width="1"/>
+  
+  <!-- Cloud/Storage icon -->
+  <circle cx="200" cy="80" r="25" fill="#F0F9FF" stroke="#0EA5E9" stroke-width="2"/>
+  <circle cx="220" cy="70" r="15" fill="#F0F9FF" stroke="#0EA5E9" stroke-width="2"/>
+  <circle cx="180" cy="70" r="15" fill="#F0F9FF" stroke="#0EA5E9" stroke-width="2"/>
+  <path d="M165 80 Q165 60 185 60 Q200 50 220 60 Q235 60 235 80" fill="#F0F9FF" stroke="#0EA5E9" stroke-width="2"/>
+  
+  <!-- Upload arrow -->
+  <line x1="200" y1="90" x2="200" y2="70" stroke="#0EA5E9" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0EA5E9"/>
+    </marker>
+  </defs>
+  
+  <!-- Text -->
+  <text x="200" y="290" text-anchor="middle" fill="#64748B" font-family="system-ui" font-size="14">文件管理</text>
+</svg>

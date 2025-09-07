@@ -5,10 +5,13 @@ namespace App\Providers;
 use App\Services\ThemeManager;
 use App\Services\ThemeAutoLoader;
 use App\Services\ThemeCustomizationService;
+use App\Traits\ChecksInstallStatus;
 use Illuminate\Support\ServiceProvider;
 
 class ThemeServiceProvider extends ServiceProvider
 {
+    use ChecksInstallStatus;
+
     public function register(): void
     {
         $this->app->singleton(ThemeManager::class, function ($app) {
@@ -30,6 +33,11 @@ class ThemeServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // 检查是否在安装过程中
+        if ($this->isInstalling()) {
+            return;
+        }
+
         $themeLoader = $this->app->make(ThemeAutoLoader::class);
         $themeLoader->boot();
     }

@@ -43,8 +43,8 @@ class PluginController extends Controller
                                 'description' => $manifest['description'] ?? '',
                                 'version' => $manifest['version'] ?? '1.0.0',
                                 'author' => $manifest['author'] ?? '',
-                                'status' => $plugin->status ?? 'inactive',
-                                'priority' => $plugin->priority ?? 50,
+                                'status' => $plugin ? $plugin->status : 'inactive',
+                                'priority' => $plugin ? $plugin->priority : 50,
                                 'installed' => $plugin ? true : false,
                                 'manifest' => $manifest,
                                 'path' => $dir
@@ -138,7 +138,7 @@ class PluginController extends Controller
                 'plugin' => $plugin,
                 'path' => $pluginPath,
                 'installed' => $plugin ? true : false,
-                'status' => $plugin->status ?? 'inactive'
+                'status' => $plugin ? $plugin->status : 'inactive'
             ];
             
             return view('admin.plugins.show', compact('pluginData'));

@@ -61,7 +61,13 @@ class PluginAutoLoader
 
     public function loadActivePlugins(): void
     {
-        $activePlugins = Plugin::active()->orderBy('priority')->get();
+        try {
+            $activePlugins = Plugin::active()->orderBy('priority')->get();
+        } catch (\Exception $e) {
+            // 数据库不可用时跳过活动插件加载
+            \Illuminate\Support\Facades\Log::debug('Active plugins loading skipped due to database unavailability: ' . $e->getMessage());
+            return;
+        }
 
         foreach ($activePlugins as $pluginModel) {
             try {
@@ -70,7 +76,12 @@ class PluginAutoLoader
                 Log::error("加载插件 {$pluginModel->slug} 失败: " . $e->getMessage());
                 
                 // 自动禁用有问题的插件
-                $pluginModel->update(['status' => 'error']);
+                try {
+                    $pluginModel->update(['status' => 'broken']);
+                } catch (\Exception $updateException) {
+                    // 如果更新也失败（比如数据库问题），记录日志但不中断
+                    Log::error("无法更新插件状态: " . $updateException->getMessage());
+                }
             }
         }
     }
@@ -159,7 +170,14 @@ class PluginAutoLoader
             }
 
             // 重新加载插件
-            $pluginModel = Plugin::where('slug', $pluginSlug)->first();
+            try {
+                $pluginModel = Plugin::where('slug', $pluginSlug)->first();
+            } catch (\Exception $e) {
+                // 数据库不可用时跳过重新加载
+                Log::debug("Plugin reload skipped due to database unavailability: " . $e->getMessage());
+                return false;
+            }
+            
             if ($pluginModel && $pluginModel->status === 'active') {
                 $this->loadPlugin($pluginModel);
                 return true;
@@ -192,7 +210,14 @@ class PluginAutoLoader
 
     protected function loadPluginConfigurations(): void
     {
-        $plugins = Plugin::all();
+        // 检查数据库是否可用（安装期间跳过）
+        try {
+            $plugins = Plugin::all();
+        } catch (\Exception $e) {
+            // 数据库不可用时跳过插件配置加载
+            \Illuminate\Support\Facades\Log::debug('Plugin configurations skipped due to database unavailability: ' . $e->getMessage());
+            return;
+        }
 
         foreach ($plugins as $plugin) {
             $this->loadPluginConfiguration($plugin->slug);
@@ -320,7 +345,13 @@ class PluginAutoLoader
     protected function syncDiscoveredPlugins(array $discoveredPlugins): void
     {
         foreach ($discoveredPlugins as $slug => $metadata) {
-            $existingPlugin = Plugin::where('slug', $slug)->first();
+            try {
+                $existingPlugin = Plugin::where('slug', $slug)->first();
+            } catch (\Exception $e) {
+                // 数据库不可用时跳过插件同步
+                Log::debug("Plugin sync skipped due to database unavailability: " . $e->getMessage());
+                continue;
+            }
             
             if (!$existingPlugin) {
                 Log::info("发现新插件: {$slug}");

@@ -71,7 +71,7 @@
     
     @if($can_create)
     <a href="{{ route('admin.' . $route . '.create') }}" class="btn btn-primary">
-        <i class="ti ti-plus me-1"></i>
+        <i class="bi bi-plus me-1"></i>
         创建{{ $title }}
     </a>
     @endif
@@ -86,7 +86,7 @@
                 <label for="search" class="form-label small text-muted mb-1">搜索</label>
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0">
-                        <i class="ti ti-search text-muted"></i>
+                        <i class="bi bi-search text-muted"></i>
                     </span>
                     <input type="text" id="search" name="search" class="form-control border-start-0" 
                            value="{{ $search_query }}" placeholder="输入关键词搜索...">
@@ -111,11 +111,11 @@
             
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-outline-primary">
-                    <i class="ti ti-search me-1"></i>
+                    <i class="bi bi-search me-1"></i>
                     搜索
                 </button>
                 <a href="{{ route('admin.' . $route . '.index') }}" class="btn btn-outline-secondary">
-                    <i class="ti ti-x me-1"></i>
+                    <i class="bi bi-x me-1"></i>
                     清除
                 </a>
             </div>
@@ -170,7 +170,7 @@
                         @endif>
                         {{ $column['label'] }}
                         @if($column['sortable'] ?? false)
-                        <i class="ti ti-chevron-down sort-icon {{ request('sort') == $column['name'] ? 'active' : '' }}"></i>
+                        <i class="bi bi-chevron-down sort-icon {{ request('sort') == $column['name'] ? 'active' : '' }}"></i>
                         @endif
                     </th>
                     @endforeach
@@ -216,11 +216,11 @@
                             @else
                             <div class="bg-light rounded d-flex align-items-center justify-content-center" 
                                  style="width: 40px; height: 40px;">
-                                <i class="ti ti-photo text-muted"></i>
+                                <i class="bi bi-image text-muted"></i>
                             </div>
                             @endif
                         @elseif($column['type'] === 'boolean')
-                            <i class="ti {{ $item->{$column['name']} ? 'ti-check text-success' : 'ti-x text-danger' }}"></i>
+                            <i class="bi {{ $item->{$column['name']} ? 'bi-check text-success' : 'bi-x text-danger' }}"></i>
                         @else
                             {{ $item->{$column['name']} }}
                         @endif
@@ -230,18 +230,18 @@
                         <div class="dropdown">
                             <button class="btn btn-sm btn-outline-secondary" type="button" 
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="ti ti-dots-vertical"></i>
+                                <i class="bi bi-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <a class="dropdown-item" href="{{ route('admin.' . $route . '.show', $item->id) }}">
-                                        <i class="ti ti-eye me-2"></i>查看
+                                        <i class="bi bi-eye me-2"></i>查看
                                     </a>
                                 </li>
                                 @if($can_edit)
                                 <li>
                                     <a class="dropdown-item" href="{{ route('admin.' . $route . '.edit', $item->id) }}">
-                                        <i class="ti ti-edit me-2"></i>编辑
+                                        <i class="bi bi-edit me-2"></i>编辑
                                     </a>
                                 </li>
                                 @endif
@@ -253,7 +253,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="dropdown-item text-danger">
-                                            <i class="ti ti-trash me-2"></i>删除
+                                            <i class="bi bi-trash me-2"></i>删除
                                         </button>
                                     </form>
                                 </li>
@@ -266,7 +266,7 @@
                 <tr>
                     <td colspan="{{ count($columns) + 2 }}" class="text-center py-5">
                         <div class="text-muted">
-                            <i class="ti ti-inbox fs-1 d-block mb-3"></i>
+                            <i class="bi bi-inbox fs-1 d-block mb-3"></i>
                             @if($search_query)
                                 没有找到匹配的结果
                             @else
@@ -275,7 +275,7 @@
                         </div>
                         @if($can_create && !$search_query)
                         <a href="{{ route('admin.' . $route . '.create') }}" class="btn btn-primary mt-3">
-                            <i class="ti ti-plus me-1"></i>
+                            <i class="bi bi-plus me-1"></i>
                             创建第一个{{ $title }}
                         </a>
                         @endif

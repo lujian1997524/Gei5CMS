@@ -8,6 +8,8 @@ class Hook extends BaseModel
 {
     use HasFactory;
 
+    protected $table = 'hooks';
+
     protected $fillable = [
         'tag',
         'callback',

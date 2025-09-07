@@ -6,10 +6,13 @@ use App\Services\PluginManager;
 use App\Services\PluginAutoLoader;
 use App\Services\PluginSandbox;
 use App\Services\PluginDependencyResolver;
+use App\Traits\ChecksInstallStatus;
 use Illuminate\Support\ServiceProvider;
 
 class PluginServiceProvider extends ServiceProvider
 {
+    use ChecksInstallStatus;
+
     public function register(): void
     {
         $this->app->singleton(PluginManager::class, function ($app) {
@@ -36,6 +39,11 @@ class PluginServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // 检查是否在安装过程中
+        if ($this->isInstalling()) {
+            return;
+        }
+
         $pluginLoader = $this->app->make(PluginAutoLoader::class);
         $pluginLoader->boot();
     }

@@ -29,10 +29,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string',
+            'login' => 'required|string',
             'password' => 'required|min:6',
         ], [
-            'username.required' => '用户名或邮箱不能为空',
+            'login.required' => '用户名或邮箱不能为空',
             'password.required' => '密码不能为空',
             'password.min' => '密码至少需要6位字符',
         ]);
@@ -40,10 +40,10 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return back()
                 ->withErrors($validator)
-                ->withInput($request->only('username'));
+                ->withInput($request->only('login'));
         }
 
-        $loginValue = $request->input('username');
+        $loginValue = $request->input('login');
         $password = $request->input('password');
         $remember = $request->boolean('remember');
 
@@ -62,8 +62,8 @@ class AuthController extends Controller
             if ($user->status !== 'active') {
                 Auth::guard('admin')->logout();
                 return back()->withErrors([
-                    'username' => '账户已被停用，请联系管理员'
-                ])->withInput($request->only('username'));
+                    'login' => '账户已被停用，请联系管理员'
+                ])->withInput($request->only('login'));
             }
 
             // 更新最后登录信息
@@ -81,8 +81,8 @@ class AuthController extends Controller
         do_action('admin.user.login_failed', $loginValue);
 
         return back()->withErrors([
-            'username' => '用户名/邮箱或密码错误'
-        ])->withInput($request->only('username'));
+            'login' => '用户名/邮箱或密码错误'
+        ])->withInput($request->only('login'));
     }
 
     /**
@@ -123,6 +123,7 @@ class AuthController extends Controller
 
         $admin = AdminUser::create([
             'name' => 'admin',
+            'username' => 'admin',
             'email' => 'admin@gei5cms.local',
             'password' => Hash::make('123456'),
             'status' => 'active',

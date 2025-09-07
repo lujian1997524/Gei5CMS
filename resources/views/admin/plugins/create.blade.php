@@ -12,7 +12,7 @@
         </div>
         <div>
             <a href="{{ route('admin.plugins.index') }}" class="btn btn-outline-primary">
-                <i class="ti ti-arrow-left me-2" style="font-size: 14px;"></i>
+                <i class="bi bi-arrow-left me-2" style="font-size: 14px;"></i>
                 返回列表
             </a>
         </div>
@@ -22,7 +22,7 @@
 <!-- Alerts -->
 @if($errors->any())
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="ti ti-x me-2"></i>
+    <i class="bi bi-x me-2"></i>
     <ul class="mb-0">
         @foreach($errors->all() as $error)
             <li>{{ $error }}</li>
@@ -34,7 +34,7 @@
 
 @if(session('error'))
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="ti ti-x me-2"></i>
+    <i class="bi bi-x me-2"></i>
     {{ session('error') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
@@ -46,7 +46,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title">
-                    <i class="ti ti-upload me-2"></i>
+                    <i class="bi bi-upload me-2"></i>
                     插件文件上传
                 </h5>
             </div>
@@ -58,7 +58,7 @@
                     <div class="upload-area mb-4">
                         <div class="upload-zone" id="uploadZone">
                             <div class="upload-icon">
-                                <i class="ti ti-cloud-upload"></i>
+                                <i class="bi bi-cloud-upload"></i>
                             </div>
                             <div class="upload-text">
                                 <h4>选择插件文件或拖拽到此处</h4>
@@ -71,7 +71,7 @@
                                    required 
                                    style="display: none;">
                             <button type="button" class="btn btn-primary" onclick="document.getElementById('plugin_file').click()">
-                                <i class="ti ti-folder-open me-2"></i>
+                                <i class="bi bi-folder-open me-2"></i>
                                 选择文件
                             </button>
                         </div>
@@ -79,13 +79,13 @@
                         <!-- Selected file info -->
                         <div id="fileInfo" class="file-info mt-3" style="display: none;">
                             <div class="d-flex align-items-center">
-                                <i class="ti ti-file-zip me-2 text-primary"></i>
+                                <i class="bi bi-file-zip me-2 text-primary"></i>
                                 <div class="flex-grow-1">
                                     <div class="fw-semibold" id="fileName"></div>
                                     <div class="text-muted small" id="fileSize"></div>
                                 </div>
                                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearFile()">
-                                    <i class="ti ti-x"></i>
+                                    <i class="bi bi-x"></i>
                                 </button>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                     <!-- Upload Instructions -->
                     <div class="alert alert-info">
                         <h6 class="alert-heading">
-                            <i class="ti ti-info-circle me-2"></i>
+                            <i class="bi bi-info-circle-fill me-2"></i>
                             插件上传说明
                         </h6>
                         <ul class="mb-0 small">
@@ -112,7 +112,7 @@
                             取消
                         </a>
                         <button type="submit" class="btn btn-primary" id="uploadBtn" disabled>
-                            <i class="ti ti-upload me-2"></i>
+                            <i class="bi bi-upload me-2"></i>
                             上传插件
                         </button>
                     </div>

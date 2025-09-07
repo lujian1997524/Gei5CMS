@@ -5,8 +5,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PluginController;
 use App\Http\Controllers\Admin\ThemeController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\HookController;
+use App\Http\Controllers\Admin\FileManagerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,17 +63,32 @@ Route::group([
     Route::resource('settings', SettingController::class)->except(['show']);
     Route::post('settings/bulk', [SettingController::class, 'bulkAction'])->name('settings.bulk');
     Route::get('settings/group/{group}', [SettingController::class, 'group'])->name('settings.group');
+    Route::post('settings/group/{group}', [SettingController::class, 'updateGroup'])->name('settings.update-group');
+    Route::post('settings/quick-update', [SettingController::class, 'quickUpdate'])->name('settings.quick-update');
+    Route::get('settings/export', [SettingController::class, 'export'])->name('settings.export');
+    Route::post('settings/import', [SettingController::class, 'import'])->name('settings.import');
+    
+    // 管理员用户管理
+    Route::resource('admin-users', AdminUserController::class);
+    Route::post('admin-users/bulk', [AdminUserController::class, 'bulkAction'])->name('admin-users.bulk');
+    Route::post('admin-users/{adminUser}/permissions', [AdminUserController::class, 'updatePermissions'])->name('admin-users.permissions');
     
     // 用户管理
     Route::resource('users', UserController::class);
     Route::post('users/bulk', [UserController::class, 'bulkAction'])->name('users.bulk');
-    Route::post('users/{user}/permissions', [UserController::class, 'updatePermissions'])->name('users.permissions');
+    Route::post('users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+    Route::post('users/{user}/toggle-verification', [UserController::class, 'toggleEmailVerification'])->name('users.toggle-verification');
     
-    // 钩子管理
-    Route::resource('hooks', HookController::class);
-    Route::post('hooks/bulk', [HookController::class, 'bulkAction'])->name('hooks.bulk');
-    Route::post('hooks/{hook}/toggle', [HookController::class, 'toggle'])->name('hooks.toggle');
-    Route::get('hooks/category/{category}', [HookController::class, 'category'])->name('hooks.category');
+    // 文件管理
+    Route::get('file-manager', [FileManagerController::class, 'index'])->name('file-manager.index');
+    Route::post('file-manager/upload', [FileManagerController::class, 'upload'])->name('file-manager.upload');
+    Route::post('file-manager/create-folder', [FileManagerController::class, 'createFolder'])->name('file-manager.create-folder');
+    Route::get('file-manager/files/{file}', [FileManagerController::class, 'show'])->name('file-manager.show');
+    Route::get('file-manager/files/{file}/edit', [FileManagerController::class, 'edit'])->name('file-manager.edit');
+    Route::put('file-manager/files/{file}', [FileManagerController::class, 'update'])->name('file-manager.update');
+    Route::delete('file-manager/files/{file}', [FileManagerController::class, 'destroy'])->name('file-manager.destroy');
+    Route::delete('file-manager/folders/{folder}', [FileManagerController::class, 'destroyFolder'])->name('file-manager.destroy-folder');
+    Route::post('file-manager/bulk', [FileManagerController::class, 'bulkAction'])->name('file-manager.bulk');
     
     // 内容管理 (由主题提供)
     Route::get('content', function () {
@@ -85,41 +101,23 @@ Route::group([
         ]);
     })->name('content.index');
     
-    // 媒体库
-    Route::prefix('media')->name('media.')->group(function () {
-        Route::get('/', [MediaController::class, 'index'])->name('index');
-        Route::post('upload', [MediaController::class, 'upload'])->name('upload');
-        Route::delete('{media}', [MediaController::class, 'destroy'])->name('destroy');
-        Route::get('download/{media}', [MediaController::class, 'download'])->name('download');
-    });
-    
-    // 数据分析
-    Route::prefix('analytics')->name('analytics.')->group(function () {
-        Route::get('/', [AnalyticsController::class, 'index'])->name('index');
-        Route::get('plugins', [AnalyticsController::class, 'plugins'])->name('plugins');
-        Route::get('themes', [AnalyticsController::class, 'themes'])->name('themes');
-        Route::get('system', [AnalyticsController::class, 'system'])->name('system');
-    });
-    
-    // 系统日志
-    Route::prefix('logs')->name('logs.')->group(function () {
-        Route::get('/', [LogController::class, 'index'])->name('index');
-        Route::get('{log}', [LogController::class, 'show'])->name('show');
-        Route::delete('{log}', [LogController::class, 'destroy'])->name('destroy');
-        Route::post('clear', [LogController::class, 'clear'])->name('clear');
-    });
-    
     // 个人资料
-    Route::get('profile', [ProfileController::class, 'show'])->name('profile');
-    Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::get('profile', function() {
+        return view('admin.profile.show');
+    })->name('profile');
     
     // 系统工具
-    Route::prefix('tools')->name('tools.')->group(function () {
-        Route::get('/', [ToolsController::class, 'index'])->name('index');
-        Route::post('cache/clear', [ToolsController::class, 'clearCache'])->name('cache.clear');
-        Route::post('optimize', [ToolsController::class, 'optimize'])->name('optimize');
-        Route::get('phpinfo', [ToolsController::class, 'phpinfo'])->name('phpinfo');
-        Route::get('database', [ToolsController::class, 'database'])->name('database');
+    Route::get('tools', function() {
+        return view('admin.tools.index');
+    })->name('tools.index');
+    
+    // 多语言API路由
+    Route::prefix('api/language')->name('api.language.')->group(function () {
+        Route::get('supported', [App\Http\Controllers\Api\LanguageController::class, 'getSupportedLanguages'])->name('supported');
+        Route::get('current', [App\Http\Controllers\Api\LanguageController::class, 'getCurrentLanguage'])->name('current');
+        Route::post('set', [App\Http\Controllers\Api\LanguageController::class, 'setLanguage'])->name('set');
+        Route::post('translate', [App\Http\Controllers\Api\LanguageController::class, 'translate'])->name('translate');
+        Route::post('translate-batch', [App\Http\Controllers\Api\LanguageController::class, 'translateBatch'])->name('translate-batch');
+        Route::get('alternate-urls', [App\Http\Controllers\Api\LanguageController::class, 'getAlternateUrls'])->name('alternate-urls');
     });
 });

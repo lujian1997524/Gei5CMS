@@ -201,6 +201,7 @@ Gei5CMS/
 |------|------|
 | [架构设计](docs/ARCHITECTURE.md) | 系统架构和设计理念 |
 | [钩子系统](docs/MODERN_HOOK_SYSTEM.md) | 钩子系统完整指南 |
+| [用户系统](docs/USER_SYSTEM_ARCHITECTURE.md) | 用户系统架构设计 |
 | [API参考](docs/API_REFERENCE.md) | 开发接口文档 |
 | [开发流程](docs/DEVELOPMENT_WORKFLOW.md) | 项目开发规范 |
 

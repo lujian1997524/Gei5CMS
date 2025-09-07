@@ -219,7 +219,7 @@ class AdminMenuService
      */
     protected static function validateMenu(array $menu): bool
     {
-        $required = ['key', 'label', 'route'];
+        $required = ['key', 'label'];
         
         foreach ($required as $field) {
             if (!isset($menu[$field]) || empty($menu[$field])) {
@@ -227,13 +227,8 @@ class AdminMenuService
             }
         }
 
-        // 验证position字段
-        if (isset($menu['position']) && !in_array($menu['position'], ['top', 'middle', 'bottom'])) {
-            return false;
-        }
-
-        // 验证子菜单结构
-        if (isset($menu['children'])) {
+        // 如果有子菜单，则不需要route，否则必须有route
+        if (isset($menu['children']) && !empty($menu['children'])) {
             if (!is_array($menu['children'])) {
                 return false;
             }
@@ -243,6 +238,16 @@ class AdminMenuService
                     return false;
                 }
             }
+        } else {
+            // 没有子菜单时必须有route
+            if (!isset($menu['route']) || empty($menu['route'])) {
+                return false;
+            }
+        }
+
+        // 验证position字段
+        if (isset($menu['position']) && !in_array($menu['position'], ['top', 'middle', 'bottom'])) {
+            return false;
         }
 
         return true;
@@ -295,7 +300,7 @@ class AdminMenuService
     {
         $url = route($menu['route'], $menu['params'] ?? []);
         $active = request()->routeIs($menu['active'] ?? $menu['route']) ? 'active' : '';
-        $icon = $menu['icon'] ?? 'ti ti-circle';
+        $icon = $menu['icon'] ?? 'bi bi-circle';
         $badge = isset($menu['badge']) ? '<span class="nav-badge">' . e($menu['badge']) . '</span>' : '';
         
         echo '<a href="' . $url . '" class="nav-link ' . $active . '">';

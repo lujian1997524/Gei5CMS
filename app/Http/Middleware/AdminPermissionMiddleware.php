@@ -93,16 +93,26 @@ class AdminPermissionMiddleware
             'admin.settings.bulk' => 'settings.bulk',
             'admin.settings.group' => 'settings.view',
 
-            // 用户管理权限
-            'admin.users.index' => 'users.view',
-            'admin.users.show' => 'users.view',
-            'admin.users.create' => 'users.create',
-            'admin.users.store' => 'users.create',
-            'admin.users.edit' => 'users.edit',
-            'admin.users.update' => 'users.edit',
-            'admin.users.destroy' => 'users.delete',
-            'admin.users.bulk' => 'users.bulk',
-            'admin.users.permissions' => 'users.permissions',
+            // 管理员用户管理权限
+            'admin.admin-users.index' => 'users.view',
+            'admin.admin-users.show' => 'users.view',
+            'admin.admin-users.create' => 'users.create',
+            'admin.admin-users.store' => 'users.create',
+            'admin.admin-users.edit' => 'users.edit',
+            'admin.admin-users.update' => 'users.edit',
+            'admin.admin-users.destroy' => 'users.delete',
+            'admin.admin-users.bulk' => 'users.bulk',
+            'admin.admin-users.permissions' => 'users.permissions',
+
+            // 前台用户管理权限  
+            'admin.front-users.index' => 'front_users.view',
+            'admin.front-users.show' => 'front_users.view',
+            'admin.front-users.edit' => 'front_users.edit',
+            'admin.front-users.update' => 'front_users.edit',
+            'admin.front-users.destroy' => 'front_users.delete',
+            'admin.front-users.bulk' => 'front_users.bulk',
+            'admin.front-users.reset-password' => 'front_users.edit',
+            'admin.front-users.toggle-verification' => 'front_users.edit',
 
             // 钩子管理权限
             'admin.hooks.index' => 'hooks.view',

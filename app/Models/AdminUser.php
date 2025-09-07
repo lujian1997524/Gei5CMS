@@ -6,15 +6,20 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Sanctum\HasApiTokens;
 
 class AdminUser extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
-    protected $table = 'admin_users';
+    public function getTable()
+    {
+        return config('database.connections.mysql.prefix', '') . 'admin_users';
+    }
 
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'avatar',

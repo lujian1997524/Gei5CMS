@@ -12,11 +12,11 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-primary" onclick="window.location.reload()">
-                <i class="ti ti-refresh me-2" style="font-size: 14px;"></i>
+                <i class="bi bi-arrow-clockwise me-2" style="font-size: 14px;"></i>
                 刷新列表
             </button>
             <a href="{{ route('admin.themes.create') }}" class="btn btn-primary">
-                <i class="ti ti-plus me-2" style="font-size: 14px;"></i>
+                <i class="bi bi-plus me-2" style="font-size: 14px;"></i>
                 上传主题
             </a>
         </div>
@@ -26,7 +26,7 @@
 <!-- Alerts -->
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="ti ti-check me-2"></i>
+    <i class="bi bi-check me-2"></i>
     {{ session('success') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
@@ -34,7 +34,7 @@
 
 @if(session('error'))
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="ti ti-x me-2"></i>
+    <i class="bi bi-x me-2"></i>
     {{ session('error') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
@@ -44,12 +44,12 @@
 @if(empty($availableThemes))
 <div class="text-center py-5">
     <div class="mb-3">
-        <i class="ti ti-palette" style="font-size: 64px; color: var(--text-secondary);"></i>
+        <i class="bi bi-brush" style="font-size: 64px; color: var(--text-secondary);"></i>
     </div>
     <h3 class="mb-2">暂无主题</h3>
     <p class="text-muted mb-4">还没有安装任何主题，点击上传主题开始打造网站外观</p>
     <a href="{{ route('admin.themes.create') }}" class="btn btn-primary">
-        <i class="ti ti-plus me-2"></i>
+        <i class="bi bi-plus me-2"></i>
         上传第一个主题
     </a>
 </div>
@@ -64,7 +64,7 @@
                      class="preview-image" loading="lazy">
             @else
                 <div class="preview-placeholder">
-                    <i class="ti ti-photo"></i>
+                    <i class="bi bi-image"></i>
                     <span>暂无预览</span>
                 </div>
             @endif
@@ -72,7 +72,7 @@
             <!-- Active Badge -->
             @if($theme['status'] === 'active')
             <div class="active-badge">
-                <i class="ti ti-check"></i>
+                <i class="bi bi-check"></i>
                 当前主题
             </div>
             @endif
@@ -82,12 +82,12 @@
                 <div class="preview-actions">
                     <a href="{{ route('admin.themes.show', $theme['slug']) }}" 
                        class="btn btn-sm btn-light" title="查看详情">
-                        <i class="ti ti-eye"></i>
+                        <i class="bi bi-eye"></i>
                     </a>
                     @if($theme['status'] !== 'active')
                     <a href="{{ route('admin.themes.preview', $theme['slug']) }}" 
                        class="btn btn-sm btn-light" title="预览主题">
-                        <i class="ti ti-external-link"></i>
+                        <i class="bi bi-external-link"></i>
                     </a>
                     @endif
                 </div>
@@ -108,7 +108,7 @@
             @if($theme['author'])
             <div class="theme-meta">
                 <span class="meta-item">
-                    <i class="ti ti-user"></i>
+                    <i class="bi bi-user"></i>
                     {{ is_array($theme['author']) ? ($theme['author']['name'] ?? '未知') : $theme['author'] }}
                 </span>
             </div>
@@ -133,7 +133,7 @@
             <div class="d-flex gap-2 w-100">
                 <a href="{{ route('admin.themes.customize', $theme['slug']) }}" 
                    class="btn btn-primary btn-sm flex-fill">
-                    <i class="ti ti-settings"></i>
+                    <i class="bi bi-gear"></i>
                     自定义
                 </a>
                 <form action="{{ route('admin.themes.deactivate', $theme['slug']) }}" 
@@ -141,7 +141,7 @@
                     @csrf
                     <button type="submit" class="btn btn-outline-secondary btn-sm w-100"
                             onclick="return confirm('确定要停用此主题吗？')">
-                        <i class="ti ti-pause"></i>
+                        <i class="bi bi-pause"></i>
                         停用
                     </button>
                 </form>
@@ -152,7 +152,7 @@
                       method="POST" class="flex-fill">
                     @csrf
                     <button type="submit" class="btn btn-primary btn-sm w-100">
-                        <i class="ti ti-check"></i>
+                        <i class="bi bi-check"></i>
                         激活
                     </button>
                 </form>
@@ -160,20 +160,20 @@
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
                             data-bs-toggle="dropdown">
-                        <i class="ti ti-dots"></i>
+                        <i class="bi bi-three-dots"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
                             <a class="dropdown-item" 
                                href="{{ route('admin.themes.show', $theme['slug']) }}">
-                                <i class="ti ti-info-circle me-2"></i>
+                                <i class="bi bi-info-circle-fill me-2"></i>
                                 详情
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" 
                                href="{{ route('admin.themes.preview', $theme['slug']) }}">
-                                <i class="ti ti-external-link me-2"></i>
+                                <i class="bi bi-external-link me-2"></i>
                                 预览
                             </a>
                         </li>
@@ -185,7 +185,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="dropdown-item text-danger">
-                                    <i class="ti ti-trash me-2"></i>
+                                    <i class="bi bi-trash me-2"></i>
                                     删除主题
                                 </button>
                             </form>

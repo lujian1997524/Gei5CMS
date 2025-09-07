@@ -12,11 +12,11 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-primary" onclick="window.location.reload()">
-                <i class="ti ti-refresh me-2" style="font-size: 14px;"></i>
+                <i class="bi bi-arrow-clockwise me-2" style="font-size: 14px;"></i>
                 刷新列表
             </button>
             <a href="{{ route('admin.plugins.create') }}" class="btn btn-primary">
-                <i class="ti ti-plus me-2" style="font-size: 14px;"></i>
+                <i class="bi bi-plus me-2" style="font-size: 14px;"></i>
                 上传插件
             </a>
         </div>
@@ -26,7 +26,7 @@
 <!-- Alerts -->
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="ti ti-check me-2"></i>
+    <i class="bi bi-check me-2"></i>
     {{ session('success') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
@@ -34,7 +34,7 @@
 
 @if(session('error'))
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="ti ti-x me-2"></i>
+    <i class="bi bi-x me-2"></i>
     {{ session('error') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
@@ -44,12 +44,12 @@
 @if(empty($availablePlugins))
 <div class="text-center py-5">
     <div class="mb-3">
-        <i class="ti ti-puzzle" style="font-size: 64px; color: var(--text-secondary);"></i>
+        <i class="bi bi-puzzle" style="font-size: 64px; color: var(--text-secondary);"></i>
     </div>
     <h3 class="mb-2">暂无插件</h3>
     <p class="text-muted mb-4">还没有安装任何插件，点击上传插件开始使用功能扩展</p>
     <a href="{{ route('admin.plugins.create') }}" class="btn btn-primary">
-        <i class="ti ti-plus me-2"></i>
+        <i class="bi bi-plus me-2"></i>
         上传第一个插件
     </a>
 </div>
@@ -60,7 +60,7 @@
         <div class="plugin-card-header">
             <div class="plugin-info">
                 <div class="plugin-icon">
-                    <i class="ti ti-puzzle"></i>
+                    <i class="bi bi-puzzle"></i>
                 </div>
                 <div>
                     <h5 class="plugin-name">{{ $plugin['name'] }}</h5>
@@ -70,12 +70,12 @@
             <div class="plugin-status">
                 @if($plugin['status'] === 'active')
                 <span class="status-badge active">
-                    <i class="ti ti-check"></i>
+                    <i class="bi bi-check"></i>
                     已激活
                 </span>
                 @else
                 <span class="status-badge inactive">
-                    <i class="ti ti-circle"></i>
+                    <i class="bi bi-circle"></i>
                     未激活
                 </span>
                 @endif
@@ -90,7 +90,7 @@
             @if($plugin['author'])
             <div class="plugin-meta">
                 <span class="meta-item">
-                    <i class="ti ti-user"></i>
+                    <i class="bi bi-user"></i>
                     作者：{{ is_array($plugin['author']) ? ($plugin['author']['name'] ?? '未知') : $plugin['author'] }}
                 </span>
             </div>
@@ -104,7 +104,7 @@
                     @csrf
                     <button type="submit" class="btn btn-outline-secondary btn-sm" 
                             onclick="return confirm('确定要停用此插件吗？')">
-                        <i class="ti ti-pause"></i>
+                        <i class="bi bi-pause"></i>
                         停用
                     </button>
                 </form>
@@ -112,14 +112,14 @@
                 <form action="{{ route('admin.plugins.activate', $plugin['slug']) }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="ti ti-play"></i>
+                        <i class="bi bi-play"></i>
                         激活
                     </button>
                 </form>
                 @endif
 
                 <a href="{{ route('admin.plugins.show', $plugin['slug']) }}" class="btn btn-outline-primary btn-sm">
-                    <i class="ti ti-info-circle"></i>
+                    <i class="bi bi-info-circle-fill"></i>
                     详情
                 </a>
 
@@ -127,7 +127,7 @@
                 <div class="dropdown d-inline">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
                             data-bs-toggle="dropdown">
-                        <i class="ti ti-dots"></i>
+                        <i class="bi bi-three-dots"></i>
                     </button>
                     <ul class="dropdown-menu">
                         <li>
@@ -136,7 +136,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="dropdown-item text-danger">
-                                    <i class="ti ti-trash me-2"></i>
+                                    <i class="bi bi-trash me-2"></i>
                                     删除插件
                                 </button>
                             </form>
@@ -146,7 +146,7 @@
                         <li>
                             <button class="dropdown-item" data-bs-toggle="modal" 
                                     data-bs-target="#priorityModal{{ $plugin['slug'] }}">
-                                <i class="ti ti-sort-ascending me-2"></i>
+                                <i class="bi bi-sort-ascending me-2"></i>
                                 设置优先级
                             </button>
                         </li>

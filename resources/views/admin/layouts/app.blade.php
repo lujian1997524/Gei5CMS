@@ -20,10 +20,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/icons/bootstrap-icons.min.css') }}">
     
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
     
     <!-- macOS 15 Style CSS -->
     <style>
@@ -586,161 +586,106 @@
             <!-- Brand -->
             <div class="sidebar-brand">
                 <div class="brand-logo">
-                    <i class="ti ti-rocket"></i>
+                    <i class="bi bi-rocket"></i>
                 </div>
                 <div class="brand-text">{{ config('app.name', 'Gei5CMS') }}</div>
             </div>
 
             <!-- Navigation -->
             <nav class="nav-menu">
-                <!-- 首页 -->
-                <div class="nav-group">
-                    <div class="nav-group-title">概览</div>
-                    <div class="nav-item">
-                        <a href="{{ route('admin.dashboard') }}" 
-                           class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                            <i class="nav-icon ti ti-home"></i>
-                            <span class="nav-text">首页</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- 应用管理 - 由主题和插件动态提供 -->
                 @php
                     use App\Services\AdminMenuService;
                     
-                    // 获取按位置分组的菜单
+                    // 获取所有菜单并按位置分组
+                    $allMenus = AdminMenuService::getMenus();
                     $topMenus = AdminMenuService::getMenusByPosition('top');
                     $middleMenus = AdminMenuService::getMenusByPosition('middle');
                     $bottomMenus = AdminMenuService::getMenusByPosition('bottom');
-                    $activeTheme = \App\Models\Theme::where('status', 'active')->first();
                 @endphp
                 
-                {{-- 顶部菜单组 --}}
+                {{-- 顶部菜单 --}}
                 @if($topMenus)
-                    @foreach($topMenus as $menu)
-                        <div class="nav-group">
-                            <div class="nav-group-title">{{ $menu['group'] ?? $menu['label'] }}</div>
-                            <div class="nav-item">
-                                <a href="{{ $menu['route'] }}" 
-                                   class="nav-link {{ request()->routeIs($menu['route']) ? 'active' : '' }}">
-                                    <i class="nav-icon ti {{ $menu['icon'] }}"></i>
-                                    <span class="nav-text">{{ $menu['label'] }}</span>
-                                </a>
-                                @if(isset($menu['children']))
-                                    @foreach($menu['children'] as $child)
-                                        <div class="nav-item nav-sub-item">
-                                            <a href="{{ $child['route'] }}" 
-                                               class="nav-link {{ request()->routeIs($child['route']) ? 'active' : '' }}">
-                                                <i class="nav-icon ti {{ $child['icon'] }}"></i>
-                                                <span class="nav-text">{{ $child['label'] }}</span>
-                                            </a>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                @endif
-
-                {{-- 中间菜单组 - 主要应用功能 --}}
-                @if($activeTheme && $middleMenus)
                     <div class="nav-group">
-                        <div class="nav-group-title">{{ $activeTheme->name ?? '应用管理' }}</div>
-                        @foreach($middleMenus as $menu)
-                            <div class="nav-item">
-                                <a href="{{ $menu['route'] }}" 
-                                   class="nav-link {{ request()->routeIs($menu['route']) ? 'active' : '' }}">
-                                    <i class="nav-icon ti {{ $menu['icon'] }}"></i>
-                                    <span class="nav-text">{{ $menu['label'] }}</span>
-                                </a>
-                                @if(isset($menu['children']))
-                                    @foreach($menu['children'] as $child)
-                                        <div class="nav-item nav-sub-item">
-                                            <a href="{{ $child['route'] }}" 
-                                               class="nav-link {{ request()->routeIs($child['route']) ? 'active' : '' }}">
-                                                <i class="nav-icon ti {{ $child['icon'] }}"></i>
-                                                <span class="nav-text">{{ $child['label'] }}</span>
-                                            </a>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
+                        <div class="nav-group-title">概览</div>
+                        @foreach($topMenus as $menu)
+                            @if(isset($menu['children']))
+                                @foreach($menu['children'] as $child)
+                                    <div class="nav-item">
+                                        <a href="{{ route($child['route']) }}" 
+                                           class="nav-link {{ request()->routeIs($child['active'] ?? $child['route']) ? 'active' : '' }}">
+                                            <i class="nav-icon {{ $child['icon'] }}"></i>
+                                            <span class="nav-text">{{ $child['label'] }}</span>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="nav-item">
+                                    <a href="{{ route($menu['route']) }}" 
+                                       class="nav-link {{ request()->routeIs($menu['active'] ?? $menu['route']) ? 'active' : '' }}">
+                                        <i class="nav-icon {{ $menu['icon'] }}"></i>
+                                        <span class="nav-text">{{ $menu['label'] }}</span>
+                                    </a>
+                                </div>
+                            @endif
                         @endforeach
                     </div>
-                @elseif($activeTheme && !$middleMenus)
-                    {{-- 主题已激活但无菜单时显示示例菜单 --}}
+                @endif
+
+                {{-- 中间菜单 --}}
+                @if($middleMenus)
                     <div class="nav-group">
-                        <div class="nav-group-title">{{ $activeTheme->name ?? '应用管理' }}</div>
-                        <div class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon ti ti-edit"></i>
-                                <span class="nav-text">内容管理</span>
-                            </a>
-                        </div>
-                        <div class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon ti ti-chart-line"></i>
-                                <span class="nav-text">数据统计</span>
-                            </a>
-                        </div>
+                        <div class="nav-group-title">应用管理</div>
+                        @foreach($middleMenus as $menu)
+                            @if(isset($menu['children']))
+                                @foreach($menu['children'] as $child)
+                                    <div class="nav-item">
+                                        <a href="{{ route($child['route']) }}" 
+                                           class="nav-link {{ request()->routeIs($child['active'] ?? $child['route']) ? 'active' : '' }}">
+                                            <i class="nav-icon {{ $child['icon'] }}"></i>
+                                            <span class="nav-text">{{ $child['label'] }}</span>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="nav-item">
+                                    <a href="{{ route($menu['route']) }}" 
+                                       class="nav-link {{ request()->routeIs($menu['active'] ?? $menu['route']) ? 'active' : '' }}">
+                                        <i class="nav-icon {{ $menu['icon'] }}"></i>
+                                        <span class="nav-text">{{ $menu['label'] }}</span>
+                                    </a>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 @endif
 
-                {{-- 底部菜单组 --}}
+                {{-- 底部菜单 --}}
                 @if($bottomMenus)
-                    @foreach($bottomMenus as $menu)
-                        <div class="nav-group">
-                            <div class="nav-group-title">{{ $menu['group'] ?? $menu['label'] }}</div>
-                            <div class="nav-item">
-                                <a href="{{ $menu['route'] }}" 
-                                   class="nav-link {{ request()->routeIs($menu['route']) ? 'active' : '' }}">
-                                    <i class="nav-icon ti {{ $menu['icon'] }}"></i>
-                                    <span class="nav-text">{{ $menu['label'] }}</span>
-                                </a>
-                                @if(isset($menu['children']))
-                                    @foreach($menu['children'] as $child)
-                                        <div class="nav-item nav-sub-item">
-                                            <a href="{{ $child['route'] }}" 
-                                               class="nav-link {{ request()->routeIs($child['route']) ? 'active' : '' }}">
-                                                <i class="nav-icon ti {{ $child['icon'] }}"></i>
-                                                <span class="nav-text">{{ $child['label'] }}</span>
-                                            </a>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
+                    <div class="nav-group">
+                        <div class="nav-group-title">系统管理</div>
+                        @foreach($bottomMenus as $menu)
+                            @if(isset($menu['children']))
+                                @foreach($menu['children'] as $child)
+                                    <div class="nav-item">
+                                        <a href="{{ route($child['route']) }}" 
+                                           class="nav-link {{ request()->routeIs($child['active'] ?? $child['route']) ? 'active' : '' }}">
+                                            <i class="nav-icon {{ $child['icon'] }}"></i>
+                                            <span class="nav-text">{{ $child['label'] }}</span>
+                                        </a>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="nav-item">
+                                    <a href="{{ route($menu['route']) }}" 
+                                       class="nav-link {{ request()->routeIs($menu['active'] ?? $menu['route']) ? 'active' : '' }}">
+                                        <i class="nav-icon {{ $menu['icon'] }}"></i>
+                                        <span class="nav-text">{{ $menu['label'] }}</span>
+                                    </a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 @endif
-
-                <!-- 扩展 - 默认框架菜单 -->
-                <div class="nav-group">
-                    <div class="nav-group-title">扩展</div>
-                    <div class="nav-item">
-                        <a href="{{ route('admin.themes.index') }}" class="nav-link">
-                            <i class="nav-icon ti ti-palette"></i>
-                            <span class="nav-text">主题</span>
-                        </a>
-                    </div>
-                    <div class="nav-item">
-                        <a href="{{ route('admin.plugins.index') }}" class="nav-link">
-                            <i class="nav-icon ti ti-puzzle"></i>
-                            <span class="nav-text">插件</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- 设置 - 默认框架菜单 -->
-                <div class="nav-group">
-                    <div class="nav-group-title">设置</div>
-                    <div class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon ti ti-settings"></i>
-                            <span class="nav-text">基础设置</span>
-                        </a>
-                    </div>
-                </div>
             </nav>
         </aside>
 
@@ -750,7 +695,7 @@
             <header class="header">
                 <div class="header-left">
                     <button @click="sidebarOpen = !sidebarOpen" class="sidebar-toggle">
-                        <i class="ti ti-menu-2"></i>
+                        <i class="bi bi-list"></i>
                     </button>
                     
                     <nav>
@@ -762,11 +707,11 @@
 
                 <div class="header-right">
                     <button class="action-btn" title="搜索">
-                        <i class="ti ti-search"></i>
+                        <i class="bi bi-search"></i>
                     </button>
                     
                     <button class="action-btn" title="通知">
-                        <i class="ti ti-bell"></i>
+                        <i class="bi bi-bell"></i>
                     </button>
 
                     <div class="dropdown">
@@ -778,17 +723,17 @@
                                 <div class="user-name">{{ auth('admin')->user()->name ?? '管理员' }}</div>
                                 <div class="user-role">超级管理员</div>
                             </div>
-                            <i class="ti ti-chevron-down" style="margin-left: 4px; font-size: 12px;"></i>
+                            <i class="bi bi-chevron-down" style="margin-left: 4px; font-size: 12px;"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" href="#"><i class="ti ti-user me-2"></i>个人资料</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="ti ti-settings me-2"></i>账户设置</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>个人资料</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>账户设置</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('admin.logout') }}">
                                     @csrf
                                     <button type="submit" class="dropdown-item">
-                                        <i class="ti ti-logout me-2"></i>退出登录
+                                        <i class="bi bi-box-arrow-right me-2"></i>退出登录
                                     </button>
                                 </form>
                             </li>
@@ -801,7 +746,7 @@
             <main class="content-area">
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="ti ti-check me-2"></i>
+                        <i class="bi bi-check me-2"></i>
                         {{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -809,7 +754,7 @@
 
                 @if(session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="ti ti-alert-circle me-2"></i>
+                        <i class="bi bi-exclamation-circle me-2"></i>
                         {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -824,8 +769,8 @@
     <div class="sidebar-overlay d-md-none" :class="{ 'show': sidebarOpen }" @click="sidebarOpen = false"></div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/alpine.min.js') }}" defer></script>
     
     @stack('scripts')
 </body>

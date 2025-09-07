@@ -16,11 +16,11 @@
         </div>
         <div class="d-flex gap-2">
             <button class="btn btn-outline-primary" onclick="window.location.reload()">
-                <i class="ti ti-refresh me-2" style="font-size: 14px;"></i>
+                <i class="bi bi-arrow-clockwise me-2" style="font-size: 14px;"></i>
                 刷新数据
             </button>
             <a href="#" class="btn btn-primary">
-                <i class="ti ti-plus me-2" style="font-size: 14px;"></i>
+                <i class="bi bi-plus me-2" style="font-size: 14px;"></i>
                 快速创建
             </a>
         </div>
@@ -32,31 +32,35 @@
     @foreach($stats as $key => $stat)
     <div class="stat-card">
         <div class="stat-header">
-            <div class="stat-icon blue">
-                @if($key === 'themes')
-                    <i class="ti ti-palette"></i>
-                @elseif($key === 'plugins')
-                    <i class="ti ti-puzzle"></i>
-                @elseif($key === 'system')
-                    <i class="ti ti-server"></i>
-                @elseif($key === 'storage')
-                    <i class="ti ti-database"></i>
-                @elseif($key === 'performance')
-                    <i class="ti ti-activity"></i>
-                @elseif($key === 'memory')
-                    <i class="ti ti-cpu"></i>
-                @elseif($key === 'primary')
-                    <i class="ti ti-star"></i>
-                @elseif($key === 'secondary')
-                    <i class="ti ti-activity"></i>
-                @elseif($key === 'activity')
-                    <i class="ti ti-chart-line"></i>
-                @elseif($key === 'overview')
-                    <i class="ti ti-eye"></i>
-                @else
-                    <i class="ti ti-info-circle"></i>
-                @endif
-            </div>
+        <div class="stat-icon blue">
+            @if($key === 'users')
+                <i class="bi bi-people"></i>
+            @elseif($key === 'admins')
+                <i class="bi bi-shield-check"></i>
+            @elseif($key === 'themes')
+                <i class="bi bi-brush"></i>
+            @elseif($key === 'plugins')
+                <i class="bi bi-diagram-3"></i>
+            @elseif($key === 'system')
+                <i class="bi bi-server"></i>
+            @elseif($key === 'storage')
+                <i class="bi bi-hdd"></i>
+            @elseif($key === 'performance')
+                <i class="bi bi-graph-up"></i>
+            @elseif($key === 'memory')
+                <i class="bi bi-cpu"></i>
+            @elseif($key === 'primary')
+                <i class="bi bi-star-fill"></i>
+            @elseif($key === 'secondary')
+                <i class="bi bi-bar-chart"></i>
+            @elseif($key === 'activity')
+                <i class="bi bi-activity"></i>
+            @elseif($key === 'overview')
+                <i class="bi bi-eye"></i>
+            @else
+                <i class="bi bi-info-circle-fill"></i>
+            @endif
+        </div>
             @if(isset($stat['trend']) && isset($stat['trend_type']))
                 <div class="stat-change trend-{{ $stat['trend_type'] }}">
                     <span>{{ $stat['trend'] }}</span>
@@ -102,7 +106,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title d-flex align-items-center">
-                    <i class="ti ti-activity me-2" style="color: var(--primary-blue);"></i>
+                    <i class="bi bi-activity me-2" style="color: var(--primary-blue);"></i>
                     系统状态
                 </h5>
             </div>
@@ -139,7 +143,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title d-flex align-items-center">
-                    <i class="ti ti-zap me-2" style="color: var(--primary-green);"></i>
+                    <i class="bi bi-zap me-2" style="color: var(--primary-green);"></i>
                     快捷操作
                 </h5>
             </div>
@@ -172,7 +176,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title d-flex align-items-center">
-                    <i class="ti ti-clock me-2" style="color: var(--text-secondary);"></i>
+                    <i class="bi bi-clock me-2" style="color: var(--text-secondary);"></i>
                     最近活动
                 </h5>
             </div>

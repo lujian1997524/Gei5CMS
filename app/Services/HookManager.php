@@ -44,14 +44,27 @@ class HookManager
 
             // 保存到数据库（如果有插件slug）
             if ($pluginSlug) {
-                Hook::create([
+                // 检查是否已存在相同的钩子
+                $existingHook = Hook::where([
                     'tag' => $tag,
-                    'callback' => $this->serializeCallback($callback),
-                    'priority' => $priority,
                     'plugin_slug' => $pluginSlug,
                     'hook_type' => $hookType,
-                    'is_active' => true,
-                ]);
+                    'priority' => $priority
+                ])->first();
+                
+                if (!$existingHook) {
+                    Hook::create([
+                        'tag' => $tag,
+                        'callback' => $this->serializeCallback($callback),
+                        'priority' => $priority,
+                        'plugin_slug' => $pluginSlug,
+                        'hook_type' => $hookType,
+                        'is_active' => true,
+                    ]);
+                    Log::debug("Hook saved to database: {$tag}");
+                } else {
+                    Log::debug("Hook already exists in database: {$tag}");
+                }
             }
 
             Log::debug("Hook registered: {$tag} with priority {$priority}");
