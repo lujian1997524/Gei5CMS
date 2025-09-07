@@ -192,7 +192,7 @@ class InstallController extends Controller
             \Log::info('开始创建管理员用户');
             $adminUser = AdminUser::create([
                 'name' => $request->admin_name,
-                'username' => 'admin',
+                'username' => $request->admin_name,
                 'email' => $request->admin_email,
                 'password' => Hash::make($request->admin_password),
                 'status' => 'active',
